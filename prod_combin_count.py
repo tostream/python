@@ -1,7 +1,17 @@
-
 import os
 import os.path
 import math
+
+
+def remap_keys(d):
+    if not isinstance(d, dict):
+        return d
+    rslt = []
+    for k, v in d.items():
+        k = remap_keys(k)
+        v = remap_keys(v)
+        rslt.append({'products': k, 'count': v})
+    return rslt
 
 
 def file_exist(folder, filename):
@@ -75,13 +85,14 @@ def export_json(folder, filename, content, mode='w'):
 
 
 def export_result():
-    folder = "result"
-    json_export = []
-    filenames = get_file_list(folder)
-    for filename in filenames:
-        json_export.append(read_data_file('result', filename))
-    export_json('json', 'result.json', json_export, 'w+')
-	
+    # folder = "result"
+    # json_export = []
+    # filenames = get_file_list(folder)
+    # for filename in filenames:
+    #    json_export.append(read_data_file('result', filename))
+    # export_json('json', 'result.json', json_export, 'w+')
+    export_json('json', 'result.json', remap_keys(temp_result_arr), 'w+')
+
 
 def split_data():
     input_file = read_gz_data_file('', source_file_name)
@@ -106,20 +117,27 @@ def split_data():
 
 
 def combin_count(prod_1, prod_2):
-    folder = "result"
-    filename = "%s_%s" % (prod_1, prod_2)
-    combin_counter = [prod_1, prod_2, 0]
-    if file_exist(folder, filename):
-        combin_counter = read_data_file(folder, filename)[0]
-    combin_counter[2] = int(combin_counter[2]) + 1
-    write_result(folder, filename, combin_counter)
+    # folder = "result"
+    # filename = "%s_%s" % (prod_1, prod_2)
+    # combin_counter = [prod_1, prod_2, 0]
+
+    # if file_exist(folder, filename):
+    #    combin_counter = read_data_file(folder, filename)[0]
+    # combin_counter[2] = int(combin_counter[2]) + 1
+    # write_result(folder, filename, combin_counter)
+
+    # 2020-01-16 new try
+    if tuple([prod_1, prod_2]) in temp_result_arr:
+        temp_result_arr[prod_1, prod_2] += 1
+    else:
+        temp_result_arr[prod_1, prod_2] = 1
 
 
 def basket_check(basket_arr):
     while len(basket_arr) > 1:
         work_prod = basket_arr.pop(0)
         for j in basket_arr:
-            combin_count(work_prod, j)
+            combin_count(str(work_prod), str(j))
 
 
 def product_combin_count():
@@ -140,18 +158,22 @@ def product_combin_count():
     basket_check(current_basket_arr)
 
 
-
 if __name__ == '__main__':
     import sys
-	
-    if len(sys.argv) > 2:
-        file_path = sys.argv[1]
-        source_file_name = sys.argv[2]
-        if len(sys.argv) > 3:
-            scale = int(sys.argv[3])
-    else:
-        print("'file path' 'source file name' 'scale',first 2 parameters are required, default scale is 10000")
-        exit(1)
+
+    file_path = "C:\\Users\\ITDFWP\\Documents\\so1\\sample\\"
+    source_file_name = "data_10.csv.gz"
+    scale = 10000
+
+    temp_result_arr = {}
+    # if len(sys.argv) > 2:
+    #    file_path = sys.argv[1]
+    #    source_file_name = sys.argv[2]
+    #    if len(sys.argv) > 3:
+    #        scale = int(sys.argv[3])
+    # else:
+    #    print("'file path' 'source file name' 'scale',first 2 parameters are required, default scale is 10000")
+    #    exit(1)
     from datetime import datetime
 
     dateTimeObj = datetime.now()
