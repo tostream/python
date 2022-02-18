@@ -17,3 +17,6 @@ class Solution:
             
         ans = ''.join(stack).lstrip('0')
         return ans if ans else '0'
+
+    
+    #monotonicstack
