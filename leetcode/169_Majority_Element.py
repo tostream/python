@@ -1,3 +1,4 @@
+#hash table
 class Solution:
     def majorityElement(self, nums: List[int]) -> int:
         result = {}
@@ -9,3 +10,10 @@ class Solution:
                 result.update({item:1})
             if result[item] > majority_len:
                 return item
+
+
+#sorting
+class Solution:
+    def majorityElement(self, nums):
+        nums.sort()
+        return nums[len(nums)//2]
