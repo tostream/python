@@ -11,3 +11,16 @@ class Solution:
             level += 1 
             return max(dfs(node.left,level) , dfs(node.right,level))
         return dfs(root,0)
+
+    def maxDepth(self, root: Optional[TreeNode]) -> int:
+        if not root:
+            return 0
+        level = 1
+        queue = deque([[root, level]])
+        while queue:
+            node, level = queue.popleft()
+            if node.left:
+                queue.append([node.left, level + 1])
+            if node.right:
+                queue.append([node.right, level + 1])
+        return level
