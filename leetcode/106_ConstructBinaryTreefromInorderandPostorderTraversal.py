@@ -4,6 +4,20 @@
 #         self.val = val
 #         self.left = left
 #         self.right = right
+
+
+class Solution:
+    def buildTree(self, inorder: List[int], postorder: List[int]) -> Optional[TreeNode]:
+        
+        if not inorder or not postorder:
+            return None
+        inorderIndex = inorder.index(postorder.pop())
+        root = TreeNode(inorder[inorderIndex])
+
+        root.right = self.buildTree(inorder[inorderIndex+1:], postorder)
+        root.left = self.buildTree(inorder[:inorderIndex], postorder)
+
+        return root
 class Solution:
     def buildTree(self, inorder: List[int], postorder: List[int]) -> Optional[TreeNode]:
         
